@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title> Mini Chatbot</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="title" content="Simple Chatbot.">
+  <meta name="description" content="A simple Chatbot using HTML, CSS, and JavaScript without using API in back End by ShahidWeb!">
+
+  <link rel="shortcut icon" href="bot.jpeg" type="image/svg+xml">
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(to right, #ADD8E6, #7d7295);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      color: white;
+      overflow: hidden;
+    }
+
+    .chat-container {
+      width: 90%;
+      max-width: 400px;
+      background: #ffffff10;
+      border-radius: 20px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+      overflow: hidden;
+      backdrop-filter: blur(10px);
+      display: flex;
+      flex-direction: column;
+      height: 600px;
+      max-height: 90vh;
+    }
+    .chat-header {
+      background: #ADD8E6; /* light blue */
+      padding: 15px;
+      text-align: center;
+      font-size: 1.4em;
+      font-weight: bold;
+      border-bottom: 1px solid rgba(255,255,255,0.3);
+      user-select: none;
+      color: #003366; /* dark blue text */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 12px;
+    }
+
+    /* Profile circle next to header */
+    .profile-pic {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid #003366;
+      box-shadow: 0 0 8px rgba(0, 51, 102, 0.6);
+    }
+
+    .chat-box {
+      flex: 1;
+      overflow-y: auto;
+      padding: 15px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .message {
+      padding: 10px 15px;
+      border-radius: 15px;
+      max-width: 80%;
+      line-height: 1.4;
+      word-wrap: break-word;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.15);
+    }
+    .user {
+      background: #4a00e0;
+      color: white;
+      align-self: flex-end;
+    }
+    .bot {
+      background: #f1f1f1;
+      color: #333;
+      align-self: flex-start;
+    }
+    .chat-input {
+      display: flex;
+      border-top: 1px solid #ffffff20;
+      align-items: center;
+      padding: 10px;
+      background: #ffffff10;
+    }
+    .chat-input input {
+      flex: 1;
+      padding: 12px 15px;
+      border: none;
+      outline: none;
+      font-size: 1em;
+      border-radius: 25px;
+      margin-right: 10px;
+      background: rgba(255, 255, 255, 0);
+      color: white;
+      transition: background 0.3s;
+    }
+    .chat-input input::placeholder {
+      color: #ddd;
+    }
+    .chat-input input:focus {
+      background: rgba(255 255 255 / 0.3);
+    }
+    .chat-input button {
+      background: #4a00e0;
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      font-size: 1.1em;
+      cursor: pointer;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      transition: background 0.3s;
+    }
+    .chat-input button:hover {
+      background: #3c00b8;
+    }
+    /* Mic & Image button style */
+    .mic-button, .image-button {
+      width: 40px;
+      height: 40px;
+      margin-left: 6px;
+      padding: 0;
+      fill: white;
+      border-radius: 50%;
+      background: transparent;
+      transition: fill 0.3s, background 0.3s;
+    }
+    .mic-button:hover, .image-button:hover {
+      fill: #ff4081;
+      background: rgba(255, 64, 129, 0.15);
+    }
+    /* Images inside chat */
+    .message img {
+      max-width: 200px;
+      border-radius: 10px;
+      margin-top: 5px;
+      user-select: none;
+      pointer-events: none;
+      display: block;
+    }
+
+    @media (max-width: 480px) {
+      .chat-container {
+        height: 80vh;
+        max-width: 95vw;
+      }
+      .chat-input input {
+        font-size: 0.9em;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="chat-container">
+  <div class="chat-header">
+    Mini Chatbot 🤖
+    <img class="profile-pic" src="img.jpg"  alt="Profile Picture" title="My Profile" />
+  </div>
+  <div id="chat-box" class="chat-box"></div>
+  <div class="chat-input">
+    <input type="text" id="userInput" placeholder="Type something..." autocomplete="off" />
+    <button onclick="sendMessage()" title="Send">➡️</button>
+    <button class="mic-button" title="Voice Input (not implemented)">
+      <svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" focusable="false">
+        <path d="M12 14a3 3 0 003-3V7a3 3 0 00-6 0v4a3 3 0 003 3zm5-3a5 5 0 01-10 0H5a7 7 0 0014 0h-2zm-5 7v3h-2v-3H7v-2h10v2h-4z"/>
+      </svg>
+    </button>
+    <button class="image-button" title="Insert Image">
+      <svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" focusable="false" fill="white">
+        <path d="M21 19V5a2 2 0 00-2-2H5a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2zM7 14l3-4 2 3 3-4 4 6H5l2-1z"/>
+      </svg>
+    </button>
+  </div>
+</div>
+
+<script>
+  const chatBox = document.getElementById('chat-box');
+  const userInput = document.getElementById('userInput');
+
+  
+  const sendSound = new Audio("https://www.soundjay.com/buttons/sounds/button-3.mp3");
+  const replySound = new Audio("https://www.soundjay.com/buttons/sounds/button-09.mp3");
+
+  
+  const responses = {
+    "hi": "Hello! 👋 How can I help you?",
+    "hello": "Hello! 👋 How can I help you?",
+    "how are you": "I'm fantastic! Thanks for asking 😊",
+    "How are you": "I'm fantastic! Thanks for asking 😊",
+    "what is your name": "I'm Shahab 🤖 at your service!",
+    "bye": "Goodbye! Have a wonderful day! 👋",
+    "Bye": "Goodbye! Have a wonderful day! 👋",
+    "thanks": "You're very welcome! 🙏",
+    "show cat": "<img src='https://placekitten.com/200/200' alt='Cute Cat' />",
+    "show dog": "<img src='https://placedog.net/200/200?id=1' alt='Cute Dog' />",
+    "show faisal": "<img src='fa.jpg' alt='Cute Dog' />",
+    "default": "🤔 Hmm... I don't understand that yet."
+  };
+
+  function addMessage(content, sender) {
+    const msg = document.createElement('div');
+    msg.classList.add('message', sender);
+    msg.innerHTML = content;
+    chatBox.appendChild(msg);
+    chatBox.scrollTop = chatBox.scrollHeight;
+  }
+
+  function sendMessage() {
+    const msg = userInput.value.trim();
+    if (!msg) return;
+
+    sendSound.play();
+    addMessage(`You: ${msg}`, 'user');
+
+    const lowerMsg = msg.toLowerCase();
+    const reply = responses[lowerMsg] || responses["default"];
+
+    setTimeout(() => {
+      replySound.play();
+      addMessage(`Bot: ${reply}`, 'bot');
+    }, 500);
+
+    userInput.value = '';
+  }
+
+  userInput.addEventListener("keydown", function(e) {
+    if (e.key === "Enter") sendMessage();
+  });
+
+  // Removed localStorage save/load to start fresh on each refresh
+
+  const micBtn = document.querySelector('.mic-button');
+  micBtn.addEventListener('click', () => {
+    alert('Voice input is not implemented yet!');
+  });
+
+  const imageBtn = document.querySelector('.image-button');
+  imageBtn.addEventListener('click', () => {
+    const url = prompt("Paste image URL here:");
+    if (url && isValidUrl(url)) {
+      addMessage(`You sent an image:<br><img src="${url}" alt="User image">`, 'user');
+    } else if (url) {
+      alert("Please enter a valid URL.");
+    }
+  });
+
+  function isValidUrl(string) {
+    try {
+      new URL(string);
+      return true;
+    } catch (_) {
+      return false;  
+    }
+  }
+</script>
+
+</body>
+</html>
