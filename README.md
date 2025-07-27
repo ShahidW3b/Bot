@@ -7,7 +7,7 @@
   A smart, fully responsive chatbot web application built using <br> HTML, CSS, and JavaScript. <br> 
   Designed to simulate real-time conversations, this bot enhances user interaction through intuitive and context-aware messaging.
 
-  <a href="https://kabulconsultancy.netlify.app"><strong>➥ Live Demo</strong></a>
+  <a href="https://bot-nine-tan.vercel.app"><strong>➥ Live Demo</strong></a>
 
 </div>
 
